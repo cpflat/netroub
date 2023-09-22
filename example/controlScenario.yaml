@@ -1,0 +1,13 @@
+scenarioName: controlScenario
+logPath: "/home/colin/Documents/colin/log"
+topo: "/home/colin/Documents/colin/topo/bgp_features/topo.yaml"
+event:
+- beginTime: 1
+  type: pumba
+  host: clab-bgp_features-r2
+  pumbaCommand:
+    name: delay
+    options:
+      time: 1
+      duration: 600s
+      interface: net0

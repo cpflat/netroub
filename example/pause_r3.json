@@ -1,0 +1,20 @@
+{
+    "scenarioName" : "pause_r3",
+    "logPath" : "/home/colin/Documents/colin/log",
+    "topo":"/home/colin/Documents/colin/topo/bgp_features/topo.yaml",
+
+    "event":[
+        {
+            "beginTime" : 1,
+            "type": "pumba",
+            "host": "clab-bgp_features-r3",    
+            "pumbaCommand": {
+                "name" : "pause",
+                "options":{
+                    "duration": "300s"
+                }
+            }
+        }
+    ]
+
+}

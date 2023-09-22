@@ -1,0 +1,203 @@
+{
+    "scenarioName" : "delay_all_devices_300",
+    "logPath" : "/home/colin/Documents/colin/log",
+    "topo":"/home/colin/Documents/colin/topo/bgp_features/topo.yaml",
+
+    "event":[
+        {
+            "beginTime" : 1,
+            "type": "pumba",
+            "host": "clab-bgp_features-r1",    
+            "pumbaCommand": {
+                "name" : "delay",
+                "options":{
+                    "time" : 300, 
+                    "duration": "300s",
+                    "interface": "net0"
+                }
+            }
+        },
+        {
+            "beginTime" : 2,
+            "type": "pumba",
+            "host": "clab-bgp_features-r2",    
+            "pumbaCommand": {
+                "name" : "delay",
+                "options":{
+                    "time" : 300, 
+                    "duration": "300s",
+                    "interface": "net0"
+                }
+            }
+        },
+        {
+            "beginTime" : 3,
+            "type": "pumba",
+            "host": "clab-bgp_features-r3",    
+            "pumbaCommand": {
+                "name" : "delay",
+                "options":{
+                    "time" : 300, 
+                    "duration": "300s",
+                    "interface": "net0"
+                }
+            }
+        },
+        {
+            "beginTime" : 4,
+            "type": "pumba",
+            "host": "clab-bgp_features-r4",    
+            "pumbaCommand": {
+                "name" : "delay",
+                "options":{
+                    "time" : 300, 
+                    "duration": "300s",
+                    "interface": "net0"
+                }
+            }
+        },
+        {
+            "beginTime" : 5,
+            "type": "pumba",
+            "host": "clab-bgp_features-r5",    
+            "pumbaCommand": {
+                "name" : "delay",
+                "options":{
+                    "time" : 300, 
+                    "duration": "300s",
+                    "interface": "net0"
+                }
+            }
+        },
+        {
+            "beginTime" : 1,
+            "type": "pumba",
+            "host": "clab-bgp_features-r1",    
+            "pumbaCommand": {
+                "name" : "delay",
+                "options":{
+                    "time" : 300,  
+                    "duration": "300s",
+                    "interface": "net1"
+                }
+            }
+        },
+        {
+            "beginTime" : 2,
+            "type": "pumba",
+            "host": "clab-bgp_features-r2",    
+            "pumbaCommand": {
+                "name" : "delay",
+                "options":{
+                    "time" : 300,  
+                    "duration": "300s",
+                    "interface": "net1"
+                }
+            }
+        },
+        {
+            "beginTime" : 3,
+            "type": "pumba",
+            "host": "clab-bgp_features-r3",    
+            "pumbaCommand": {
+                "name" : "delay",
+                "options":{
+                    "time" : 300,  
+                    "duration": "300s",
+                    "interface": "net1"
+                }
+            }
+        },
+        {
+            "beginTime" : 4,
+            "type": "pumba",
+            "host": "clab-bgp_features-r4",    
+            "pumbaCommand": {
+                "name" : "delay",
+                "options":{
+                    "time" : 300,  
+                    "duration": "300s",
+                    "interface": "net1"
+                }
+            }
+        },
+        {
+            "beginTime" : 5,
+            "type": "pumba",
+            "host": "clab-bgp_features-r5",    
+            "pumbaCommand": {
+                "name" : "delay",
+                "options":{
+                    "time" : 300,  
+                    "duration": "300s",
+                    "interface": "net1"
+                }
+            }
+        },
+        {
+            "beginTime" : 1,
+            "type": "pumba",
+            "host": "clab-bgp_features-r1",    
+            "pumbaCommand": {
+                "name" : "delay",
+                "options":{
+                    "time" : 300,  
+                    "duration": "300s",
+                    "interface": "net2"
+                }
+            }
+        },
+        {
+            "beginTime" : 2,
+            "type": "pumba",
+            "host": "clab-bgp_features-r2",    
+            "pumbaCommand": {
+                "name" : "delay",
+                "options":{
+                    "time" : 300,  
+                    "duration": "300s",
+                    "interface": "net2"
+                }
+            }
+        },
+        {
+            "beginTime" : 3,
+            "type": "pumba",
+            "host": "clab-bgp_features-r3",    
+            "pumbaCommand": {
+                "name" : "delay",
+                "options":{
+                    "time" : 300,  
+                    "duration": "300s",
+                    "interface": "net2"
+                }
+            }
+        },
+        {
+            "beginTime" : 1,
+            "type": "pumba",
+            "host": "clab-bgp_features-r1",    
+            "pumbaCommand": {
+                "name" : "delay",
+                "options":{
+                    "time" : 300, 
+                    "duration": "300s",
+                    "interface": "net3"
+                }
+            }
+        },
+        {
+            "beginTime" : 2,
+            "type": "pumba",
+            "host": "clab-bgp_features-r2",    
+            "pumbaCommand": {
+                "name" : "delay",
+                "options":{
+                    "time" : 300,  
+                    "duration": "300s",
+                    "interface": "net3"
+                }
+            }
+        }
+    ] 
+}

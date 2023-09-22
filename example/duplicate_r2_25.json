@@ -1,0 +1,60 @@
+{
+    "scenarioName" : "duplicate_r2_25",
+    "logPath" : "/home/colin/Documents/colin/log",
+    "topo":"/home/colin/Documents/colin/topo/bgp_features/topo.yaml",
+
+    "event":[
+        {
+            "beginTime" : 2,
+            "type": "pumba",
+            "host": "clab-bgp_features-r2",    
+            "pumbaCommand": {
+                "name" : "duplicate",
+                "options":{
+                    "percent" : 25, 
+                    "duration": "300s",
+                    "interface": "net0"
+                }
+            }
+        },
+        {
+            "beginTime" : 2,
+            "type": "pumba",
+            "host": "clab-bgp_features-r2",    
+            "pumbaCommand": {
+                "name" : "duplicate",
+                "options":{
+                    "percent" : 25, 
+                    "duration": "300s",
+                    "interface": "net1"
+                }
+            }
+        },
+        {
+            "beginTime" : 2,
+            "type": "pumba",
+            "host": "clab-bgp_features-r2",    
+            "pumbaCommand": {
+                "name" : "duplicate",
+                "options":{
+                    "percent" : 25, 
+                    "duration": "300s",
+                    "interface": "net2"
+                }
+            }
+        },
+        {
+            "beginTime" : 2,
+            "type": "pumba",
+            "host": "clab-bgp_features-r2",    
+            "pumbaCommand": {
+                "name" : "duplicate",
+                "options":{
+                    "percent" : 25, 
+                    "duration": "300s",
+                    "interface": "net3"
+                }
+            }
+        }
+    ] 
+}
