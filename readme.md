@@ -43,14 +43,15 @@ Netroub reproduces network failure behaviors described in a scenario file on Doc
 
 ## Citation
 
-If you use this tool in your research, consider citing our CoNEXT 2023 student workshop publication (currently to appear).
+If you use this tool in your research, consider citing our [CoNEXT 2023 student workshop publication](https://doi.org/10.1145/3630202.3630222).
 
 ``` bib
 @inproceedings{colin_netroub,
   title={netroub: Towards an Emulation Platform for Network Trouble Scenarios},
   author={Colin Regal-Mezin, Satoru Kobayashi, Toshihiro Yamauchi},
-  booktitle={Proceedings of the 19th International Conference on emerging Networking EXperiments and Technologies (CoNEXT’23) Student Workshop},
+  booktitle={Proceedings of the CoNEXT Student Workshop 2023 (CoNEXT-SW '23)},
   publisher={ACM},
+  pages={17-18},
   year={2023},
 }
 ```
