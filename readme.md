@@ -5,7 +5,7 @@ Netroub reproduces network failure behaviors described in a scenario file on Doc
 
 ## Overview
 
-![form](image/overview.png)
+![form](image/netroub_overview.png)
 
 ## Requirements
 
