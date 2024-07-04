@@ -1,8 +1,8 @@
 {
     "scenarioName" : "loss_r2_r1_25",
-    "logPath" : "/home/samy/samy_internship/emulation/log",
-    "topo":"/home/samy/samy_internship/emulation/bgp_features/topo.yaml",
-    "data": "/home/samy/samy_internship/emulation/bgp_features/data.json",
+    "logPath" : "/path/to/log_directory",
+    "topo":"/path/to/topo.yaml",
+    "data": "/path/to/data.json",
 
     "event":[
         {
