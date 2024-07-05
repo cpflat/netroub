@@ -1,14 +1,18 @@
 package model
 
 type CommandOptions struct {
-	Duration     string  `json:"duration" yaml:"duration"`
-	Interface    string  `json:"interface" yaml:"interface"`
-	Time         int     `json:"time" yaml:"time"`
-	Jitter       int     `json:"jitter" yaml:"jitter"`
-	Correlation  float64 `json:"correlation" yaml:"correlation"`
-	Percent      float64 `json:"percent" yaml:"percent"`
-	Distribution string  `json:"distribution" yaml:"distribution"`
-	Limit        int     `json:"limit" yaml:"yaml"`
+	Duration     	string  `json:"duration" yaml:"duration"`
+	Interface    	string  `json:"interface" yaml:"interface"`
+	Time         	int     `json:"time" yaml:"time"`
+	Jitter       	int     `json:"jitter" yaml:"jitter"`
+	Correlation  	float64 `json:"correlation" yaml:"correlation"`
+	Percent      	float64 `json:"percent" yaml:"percent"`
+	Distribution 	string  `json:"distribution" yaml:"distribution"`
+	Limit        	int     `json:"limit" yaml:"yaml"`
+	Rate		 	string	`json:"rate" yaml:"rate"`
+	PacketOverhead 	int 	`json:"packetOverhead" yaml:"packetOverhead"`
+	CellSize 		int 	`json:"cellSize" yaml:"cellSize"`
+	CellOverhead 	int 	`json:"cellOverhead" yaml:"cellOverhead"`
 }
 
 type ConfigFileChanges struct {
