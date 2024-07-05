@@ -53,23 +53,25 @@ func DestroyNetwork() error {
 		return err
 	}
 
-	cmd := exec.Command("sudo", "rm", "-rf", path+"/"+topoName)
+	
+
+	cmd := exec.Command("sudo", "containerlab", "destroy", "--topo", model.Scenar.Topo)
 	out, err := cmd.Output()
+	if err != nil {
+		fmt.Println("Error while destroy the emulated network")
+		return err
+	}
+	fmt.Println(string(out))
+
+	cmd = exec.Command("sudo", "rm", "-rf", path+"/"+topoName)
+	out, err = cmd.Output()
 	if err != nil {
 		fmt.Println("Error while suppressing file")
 		return err
 	}
 	fmt.Println(string(out))
 
-	cmd = exec.Command("sudo", "containerlab", "destroy", "--topo", model.Scenar.Topo)
-	out, err = cmd.Output()
-	if err != nil {
-		fmt.Println("Errore while destroy the emulated network")
-		return err
-	}
-	fmt.Println(string(out))
 	return nil
-
 }
 
 func CreateDockerClient(c *cli.Context) error {
