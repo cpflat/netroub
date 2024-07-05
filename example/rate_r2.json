@@ -8,17 +8,17 @@
         {
             "beginTime" : 1,
             "type": "pumba",
-            "host": "clab-bgp_features-r2",    
+            "host": "clab-bgp_features-r1",    
             "pumbaCommand": {
                 "name" : "rate",
                 "options":{
-                    "rate": "100kbits",
-                    "packetOverhead": "0",
-                    "cellSize": "0",
-                    "cellOverhead": "0"
+                    "duration": "300s",
+                    "rate": "100kbit",
+                    "packetOverhead": 0,
+                    "cellSize": 0,
+                    "cellOverhead": 0
                 }
             }
         }
     ]
-
 }

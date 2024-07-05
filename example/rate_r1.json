@@ -12,10 +12,11 @@
             "pumbaCommand": {
                 "name" : "rate",
                 "options":{
-                    "rate": "100kbits",
-                    "packetOverhead": "0",
-                    "cellSize": "0",
-                    "cellOverhead": "0"
+                    "duration": "300s",
+                    "rate": "100kbit",
+                    "packetOverhead": 0,
+                    "cellSize": 0,
+                    "cellOverhead": 0
                 }
             }
         }
