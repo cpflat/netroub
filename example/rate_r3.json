@@ -13,7 +13,7 @@
                 "name" : "rate",
                 "options":{
                     "duration": "300s",
-                    "interface": "eth0",
+                    "interface": "net0",
                     "rate": "100kbit",
                     "packetOverhead": 0,
                     "cellSize": 0,
