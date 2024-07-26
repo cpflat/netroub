@@ -92,8 +92,8 @@ func parseCommands(index int, globalParams chaos.GlobalParams, netemParams netem
 		return docker.NewPauseCommand(chaos.DockerClient, &globalParams, netemParams.Duration, cmdOption.Limit), nil
 	case "pause":
 		return docker.NewStopCommand(chaos.DockerClient, &globalParams, true, netemParams.Duration, 0, cmdOption.Limit), nil
-	/*case "rate":
-	return netem.NewRateCommand(chaos.DockerClient, &globalParams, &netemParams, "", 0, 0, 0)*/
+	case "rate":
+		return netem.NewRateCommand(chaos.DockerClient, &globalParams, &netemParams, cmdOption.Rate, cmdOption.PacketOverhead, cmdOption.CellSize, cmdOption.CellOverhead)
 	default:
 		return nil, nil
 	}
