@@ -1,0 +1,23 @@
+{
+    "scenarioName": "delay_test_50ms",
+    "logPath": "./test_logs",
+    "topo": "./tests/topology/minimal_delay_test.yaml",
+    "data": "./tests/data/minimal_data.json",
+    "duration": "30s",
+    "hosts": ["r1", "r2"],
+    "event": [
+        {
+            "beginTime": "5s",
+            "type": "pumba",
+            "host": "r1",
+            "pumbaCommand": {
+                "name": "delay",
+                "options": {
+                    "time": 50,
+                    "duration": "20s",
+                    "interface": "net0"
+                }
+            }
+        }
+    ]
+}

@@ -4,6 +4,7 @@ const EventTypeDummy = "dummy"
 const EventTypePumba = "pumba"
 const EventTypeShell = "shell"
 const EventTypeConfig = "config"
+const EventTypeCopy = "copy"
 
 type CommandOptions struct {
 	Duration       string  `json:"duration" yaml:"duration"`
@@ -29,6 +30,14 @@ type ConfigFileChanges struct {
 	Command string `json:"command" yaml:"command"`
 }
 
+// FileCopy represents a file copy operation with optional permission settings
+type FileCopy struct {
+	Src   string `json:"src" yaml:"src"`
+	Dst   string `json:"dst" yaml:"dst"`
+	Owner string `json:"owner" yaml:"owner"` // e.g., "frr:frr", "root:root"
+	Mode  string `json:"mode" yaml:"mode"`   // e.g., "644", "755"
+}
+
 type PumbaCommand struct {
 	Name    string         `json:"name" yaml:"name"`
 	Options CommandOptions `json:"options" yaml:"options"`
@@ -44,6 +53,8 @@ type Event struct {
 	ShellCommands     []string            `json:"shellCommands" yaml:"shellCommands"`
 	VtyshChanges      []string            `json:"vtyshChanges" yaml:"vtyshChanges"`
 	ConfigFileChanges []ConfigFileChanges `json:"configFileChanges" yaml:"configFileChanges"`
+	ToContainer       []FileCopy          `json:"toContainer" yaml:"toContainer"`
+	FromContainer     []FileCopy          `json:"fromContainer" yaml:"fromContainer"`
 }
 
 func (e Event) GetHosts() (hosts []string) {

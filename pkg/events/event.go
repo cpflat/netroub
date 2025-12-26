@@ -29,6 +29,11 @@ func ExecuteEvent(index int) error {
 		if err != nil {
 			return err
 		}
+	case model.EventTypeCopy:
+		err := ExecCopyCommand(index)
+		if err != nil {
+			return err
+		}
 	default:
 		return fmt.Errorf("invalid event type %s", model.Scenar.Event[index].Type)
 	}

@@ -1,0 +1,20 @@
+{
+  "nodes": {
+    "r1": {
+      "hostname": "r1",
+      "interfaces": {
+        "net0": {
+          "ip": "192.168.1.1/24"
+        }
+      }
+    },
+    "r2": {
+      "hostname": "r2",
+      "interfaces": {
+        "net0": {
+          "ip": "192.168.1.2/24"
+        }
+      }
+    }
+  }
+}
