@@ -2,6 +2,7 @@ package events
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -43,7 +44,7 @@ func copyToContainer(index int, containerName string, fc model.FileCopy) error {
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return fmt.Errorf("docker cp failed: %s, output: %s", err, string(output))
+		return fmt.Errorf("docker cp from %s to %s failed: %w, output: %s", fc.Src, dst, err, strings.TrimSpace(string(output)))
 	}
 
 	// Determine the destination path for chown/chmod
@@ -80,6 +81,15 @@ func copyToContainer(index int, containerName string, fc model.FileCopy) error {
 
 // copyFromContainer copies a file from container to host using docker cp
 func copyFromContainer(index int, containerName string, fc model.FileCopy) error {
+	// Ensure destination directory exists
+	dstDir := fc.Dst
+	if !strings.HasSuffix(fc.Dst, "/") {
+		dstDir = filepath.Dir(fc.Dst)
+	}
+	if err := os.MkdirAll(dstDir, 0755); err != nil {
+		return fmt.Errorf("failed to create destination directory %s: %w", dstDir, err)
+	}
+
 	// docker cp <container>:<src> <dst>
 	src := fmt.Sprintf("%s:%s", containerName, fc.Src)
 	cmd := exec.Command("docker", "cp", src, fc.Dst)
@@ -87,7 +97,7 @@ func copyFromContainer(index int, containerName string, fc model.FileCopy) error
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return fmt.Errorf("docker cp failed: %s, output: %s", err, string(output))
+		return fmt.Errorf("docker cp from %s to %s failed: %w, output: %s", src, fc.Dst, err, strings.TrimSpace(string(output)))
 	}
 
 	// Determine the destination path for chown/chmod

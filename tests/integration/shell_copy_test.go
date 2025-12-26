@@ -18,26 +18,22 @@ func TestShellAndCopyEvent(t *testing.T) {
 		t.Skip("Skipping integration test in short mode")
 	}
 
-	// Setup
-	setupShellCopyTestEnvironment(t)
-	defer cleanupShellCopyTestEnvironment(t)
+	projectRoot := getProjectRoot(t)
 
-	// Wait for containers to be ready
-	waitForContainerReady(t, "clab-delay-test-r1")
+	// Ensure no existing containers (cleanup before test)
+	cleanupShellCopyTestEnvironment(t)
 
 	// Create test_logs directory
-	err := os.MkdirAll("./test_logs", 0755)
+	testLogsDir := filepath.Join(projectRoot, "test_logs")
+	err := os.MkdirAll(testLogsDir, 0755)
 	require.NoError(t, err, "Failed to create test_logs directory")
-	defer os.RemoveAll("./test_logs")
+	defer os.RemoveAll(testLogsDir)
 
-	// Execute the scenario
-	executeScenario(t, "tests/scenarios/shell_copy_test.json")
-
-	// Wait for scenario to complete
-	time.Sleep(15 * time.Second)
+	// Execute the scenario (netroub handles deploy/destroy)
+	executeScenario(t, filepath.Join(projectRoot, "tests/scenarios/shell_copy_test.json"))
 
 	// Verify the output file was copied
-	outputFile := "./test_logs/shell_output.txt"
+	outputFile := filepath.Join(testLogsDir, "shell_output.txt")
 	require.FileExists(t, outputFile, "Output file should exist after copy")
 
 	// Read and verify content
@@ -55,30 +51,26 @@ func TestCopyBidirectional(t *testing.T) {
 		t.Skip("Skipping integration test in short mode")
 	}
 
-	// Setup
-	setupShellCopyTestEnvironment(t)
-	defer cleanupShellCopyTestEnvironment(t)
+	projectRoot := getProjectRoot(t)
 
-	// Wait for containers to be ready
-	waitForContainerReady(t, "clab-delay-test-r1")
+	// Ensure no existing containers (cleanup before test)
+	cleanupShellCopyTestEnvironment(t)
 
 	// Create test_logs directory
-	err := os.MkdirAll("./test_logs", 0755)
+	testLogsDir := filepath.Join(projectRoot, "test_logs")
+	err := os.MkdirAll(testLogsDir, 0755)
 	require.NoError(t, err, "Failed to create test_logs directory")
-	defer os.RemoveAll("./test_logs")
+	defer os.RemoveAll(testLogsDir)
 
 	// Verify input file exists
-	inputFile := "./tests/data/test_input.txt"
+	inputFile := filepath.Join(projectRoot, "tests/data/test_input.txt")
 	require.FileExists(t, inputFile, "Input file should exist")
 
-	// Execute the scenario
-	executeScenario(t, "tests/scenarios/copy_bidirectional_test.json")
-
-	// Wait for scenario to complete
-	time.Sleep(15 * time.Second)
+	// Execute the scenario (netroub handles deploy/destroy)
+	executeScenario(t, filepath.Join(projectRoot, "tests/scenarios/copy_bidirectional_test.json"))
 
 	// Verify the output file was copied back
-	outputFile := "./test_logs/test_output.txt"
+	outputFile := filepath.Join(testLogsDir, "test_output.txt")
 	require.FileExists(t, outputFile, "Output file should exist after copy")
 
 	// Read and verify content
@@ -92,12 +84,16 @@ func TestCopyBidirectional(t *testing.T) {
 }
 
 // TestCopyWithPermissions tests file copy with owner/mode options
+// This test uses containerlab directly (not via netroub) to test docker cp functionality
 func TestCopyWithPermissions(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration test in short mode")
 	}
 
-	// Setup
+	projectRoot := getProjectRoot(t)
+
+	// Ensure no existing containers and deploy fresh
+	cleanupShellCopyTestEnvironment(t)
 	setupShellCopyTestEnvironment(t)
 	defer cleanupShellCopyTestEnvironment(t)
 
@@ -113,16 +109,17 @@ func TestCopyWithPermissions(t *testing.T) {
 	require.NoError(t, err, "Failed to create test file: %s", string(output))
 
 	// Copy file from container
-	err = os.MkdirAll("./test_logs", 0755)
+	testLogsDir := filepath.Join(projectRoot, "test_logs")
+	err = os.MkdirAll(testLogsDir, 0755)
 	require.NoError(t, err)
-	defer os.RemoveAll("./test_logs")
+	defer os.RemoveAll(testLogsDir)
 
-	cmd = exec.Command("docker", "cp", containerName+":/tmp/perm_test.txt", "./test_logs/")
+	cmd = exec.Command("docker", "cp", containerName+":/tmp/perm_test.txt", testLogsDir+"/")
 	output, err = cmd.CombinedOutput()
 	require.NoError(t, err, "Failed to copy file: %s", string(output))
 
 	// Verify file exists
-	require.FileExists(t, "./test_logs/perm_test.txt")
+	require.FileExists(t, filepath.Join(testLogsDir, "perm_test.txt"))
 
 	t.Log("Copy with permissions test passed")
 }
@@ -130,9 +127,13 @@ func TestCopyWithPermissions(t *testing.T) {
 func setupShellCopyTestEnvironment(t *testing.T) {
 	t.Log("Setting up shell/copy test environment...")
 
+	// Get project root directory
+	projectRoot := getProjectRoot(t)
+	topoPath := filepath.Join(projectRoot, "tests/topology/minimal_delay_test.yaml")
+
 	// Use the same topology as delay tests
-	cmd := exec.Command("sudo", "containerlab", "deploy",
-		"--topo", "tests/topology/minimal_delay_test.yaml")
+	cmd := exec.Command("sudo", "containerlab", "deploy", "--topo", topoPath)
+	cmd.Dir = projectRoot
 	output, err := cmd.CombinedOutput()
 	require.NoError(t, err, "Failed to deploy topology: %s", string(output))
 
@@ -142,8 +143,11 @@ func setupShellCopyTestEnvironment(t *testing.T) {
 func cleanupShellCopyTestEnvironment(t *testing.T) {
 	t.Log("Cleaning up shell/copy test environment...")
 
-	cmd := exec.Command("sudo", "containerlab", "destroy",
-		"--topo", "tests/topology/minimal_delay_test.yaml", "--cleanup")
+	projectRoot := getProjectRoot(t)
+	topoPath := filepath.Join(projectRoot, "tests/topology/minimal_delay_test.yaml")
+
+	cmd := exec.Command("sudo", "containerlab", "destroy", "--topo", topoPath, "--cleanup")
+	cmd.Dir = projectRoot
 	if err := cmd.Run(); err != nil {
 		t.Logf("Warning: Failed to cleanup topology: %v", err)
 	}
@@ -171,12 +175,11 @@ func waitForContainerReady(t *testing.T, containerName string) {
 func executeScenario(t *testing.T, scenarioFile string) {
 	t.Logf("Executing scenario: %s", scenarioFile)
 
-	// Get absolute path to scenario file
-	absPath, err := filepath.Abs(scenarioFile)
-	require.NoError(t, err, "Failed to get absolute path")
+	projectRoot := getProjectRoot(t)
+	netroubPath := filepath.Join(projectRoot, "netroub")
 
-	cmd := exec.Command("sudo", "./netroub", absPath)
-	cmd.Dir = getProjectRoot(t)
+	cmd := exec.Command("sudo", netroubPath, scenarioFile)
+	cmd.Dir = projectRoot
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {

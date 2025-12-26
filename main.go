@@ -217,6 +217,13 @@ func after(c *cli.Context) error {
 	c.Args() //Permit to remove a unsed paramater warning
 	/*Useless*/
 
+	// Ensure network is destroyed regardless of errors in subsequent operations
+	defer func() {
+		if err := network.DestroyNetwork(); err != nil {
+			logrus.Errorf("Failed to destroy network: %v", err)
+		}
+	}()
+
 	//Find the directory to search log file
 	path := model.FindTopoPath()
 	//Fill an array with all log file path
@@ -227,11 +234,6 @@ func after(c *cli.Context) error {
 	logrus.Debugf("Log files: %v\n", logFiles)
 	//Move tcpdump log files
 	err = network.GetTcpdumpLogs()
-	if err != nil {
-		return err
-	}
-	//Destroy the emulated network
-	err = network.DestroyNetwork()
 	if err != nil {
 		return err
 	}

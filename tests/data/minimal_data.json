@@ -1,20 +1,27 @@
 {
-  "nodes": {
-    "r1": {
-      "hostname": "r1",
-      "interfaces": {
-        "net0": {
-          "ip": "192.168.1.1/24"
-        }
-      }
+  "name": "delay-test",
+  "nodes": [
+    {
+      "name": "r1",
+      "params": {},
+      "interfaces": [
+        {"name": "net0", "params": {"name": "net0", "priority": ""}}
+      ]
     },
-    "r2": {
-      "hostname": "r2",
-      "interfaces": {
-        "net0": {
-          "ip": "192.168.1.2/24"
-        }
-      }
+    {
+      "name": "r2",
+      "params": {},
+      "interfaces": [
+        {"name": "net0", "params": {"name": "net0", "priority": ""}}
+      ]
     }
-  }
+  ],
+  "connections": [
+    {
+      "src_node": "r1",
+      "src_interface": "net0",
+      "dst_node": "r2",
+      "dst_interface": "net0"
+    }
+  ]
 }

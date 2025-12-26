@@ -38,6 +38,29 @@ type Data struct {
 
 var Devices Data
 
+// LabName is the custom lab name for containerlab.
+// If empty, Devices.Name (topology name) is used.
+var LabName string
+
+// GetLabName returns the lab name to use for containerlab.
+// Returns custom LabName if set, otherwise returns Devices.Name.
+func GetLabName() string {
+	if LabName != "" {
+		return LabName
+	}
+	return Devices.Name
+}
+
+// SetLabName sets a custom lab name for containerlab.
+func SetLabName(name string) {
+	LabName = name
+}
+
+// ResetLabName clears the custom lab name.
+func ResetLabName() {
+	LabName = ""
+}
+
 func ValidateHostNames(hosts []string) error {
 	for _, host := range hosts {
 		ok := false
@@ -54,7 +77,7 @@ func ValidateHostNames(hosts []string) error {
 }
 
 func ClabHostName(host string) string {
-	return "clab-" + Devices.Name + "-" + host
+	return "clab-" + GetLabName() + "-" + host
 }
 
 func GetDeviceIndex(device string) int {

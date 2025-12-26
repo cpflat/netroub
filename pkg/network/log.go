@@ -162,29 +162,28 @@ func MoveControlLogs(dirName string) error {
 }
 
 func MoveTcpdumpLogs(dirName string, device string, index int) error {
-
-	err := os.Mkdir(model.Scenar.LogPath+"/"+model.Scenar.ScenarioName+"/"+dirName+"/"+device+"/tcpdump", 0777)
+	tcpdumpDir := filepath.Join(model.Scenar.LogPath, model.Scenar.ScenarioName, dirName, device, "tcpdump")
+	err := os.MkdirAll(tcpdumpDir, 0777)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create tcpdump log directory %s: %w", tcpdumpDir, err)
 	}
 
 	for _, inter := range model.Devices.Nodes[index].Interfaces {
-		tcpdumpFile, err := os.Open(model.FindTopoPath() + device + "/tcpdump/tcpdump_" + inter.Name + ".log")
+		srcPath := filepath.Join(model.FindTopoPath(), device, "tcpdump", "tcpdump_"+inter.Name+".log")
+		tcpdumpFile, err := os.Open(srcPath)
 		if err != nil {
-			fmt.Println("Error while opening tcpdump log file")
-			return err
+			return fmt.Errorf("failed to open tcpdump log file %s: %w", srcPath, err)
 		}
 		defer tcpdumpFile.Close()
 
-		dst, err := os.Create(model.Scenar.LogPath + "/" + model.Scenar.ScenarioName + "/" + dirName + "/" + device + "/tcpdump/tcpdump_" + inter.Name + ".log")
+		dstPath := filepath.Join(tcpdumpDir, "tcpdump_"+inter.Name+".log")
+		dst, err := os.Create(dstPath)
 		if err != nil {
-			fmt.Println("Error while creating new tcpdump log file")
-			return err
+			return fmt.Errorf("failed to create tcpdump log file %s: %w", dstPath, err)
 		}
 		_, err = io.Copy(dst, tcpdumpFile)
 		if err != nil {
-			fmt.Println("Error while copying tcpdump log into the new file")
-			return err
+			return fmt.Errorf("failed to copy tcpdump log from %s to %s: %w", srcPath, dstPath, err)
 		}
 
 	}
@@ -198,18 +197,14 @@ func MoveTcpdumpLogs(dirName string, device string, index int) error {
 }
 
 func GetTcpdumpLogs() error {
-
-	// containerNameArray := strings.Split(model.Scenar.Event[0].Host, "-")
-	// containerName := strings.Join(containerNameArray[:len(containerNameArray)-1], "-")
-
 	for _, node := range model.Scenar.Hosts {
 		containerName := model.ClabHostName(node)
-		cmd := exec.Command("sudo", "docker", "cp", containerName+":/tcpdump", model.FindTopoPath()+node+"/")
+		dstPath := filepath.Join(model.FindTopoPath(), node) + "/"
+		cmd := exec.Command("sudo", "docker", "cp", containerName+":/tcpdump", dstPath)
 		output, err := cmd.CombinedOutput()
 		if err != nil {
-			fmt.Println("Error while moving tcpdump directory")
-			log.Println(string(output))
-			return err
+			return fmt.Errorf("failed to copy tcpdump directory from container %s to %s: %w, output: %s",
+				containerName, dstPath, err, strings.TrimSpace(string(output)))
 		}
 	}
 

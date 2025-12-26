@@ -19,8 +19,10 @@ import (
 )
 
 func EmulateNetwork() error {
-
-	cmd := exec.Command("sudo", "containerlab", "deploy", "--topo", model.Scenar.Topo)
+	labName := model.GetLabName()
+	cmd := exec.Command("sudo", "containerlab", "deploy",
+		"--name", labName,
+		"--topo", model.Scenar.Topo)
 	out, err := cmd.Output()
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
@@ -35,39 +37,16 @@ func EmulateNetwork() error {
 }
 
 func DestroyNetwork() error {
-	// var topoName string
-	// hostName := model.Scenar.Event[0].Host
-	// nbDash := strings.Count(hostName, "-")
-	// splittedPath := strings.Split(hostName, "-")
-	// for i := 0; i < nbDash; i++ {
-	// 	if i < nbDash-1 {
-	// 		topoName += splittedPath[i] + "-"
-	// 	} else {
-	// 		topoName += splittedPath[i]
-	// 	}
-	// }
-
-	// path, err := os.Getwd()
-	// if err != nil {
-	// 	fmt.Println("Error while getting the working directory")
-	// 	return err
-	// }
-
-	cmd := exec.Command("sudo", "containerlab", "destroy", "--topo", model.Scenar.Topo)
+	labName := model.GetLabName()
+	cmd := exec.Command("sudo", "containerlab", "destroy",
+		"--name", labName,
+		"--topo", model.Scenar.Topo)
 	out, err := cmd.Output()
 	if err != nil {
 		fmt.Println("Error while destroy the emulated network")
 		return err
 	}
 	fmt.Println(string(out))
-
-	// cmd = exec.Command("sudo", "rm", "-rf", path+"/"+topoName)
-	// out, err = cmd.Output()
-	// if err != nil {
-	// 	fmt.Println("Error while suppressing file")
-	// 	return err
-	// }
-	// fmt.Println(string(out))
 
 	return nil
 }
