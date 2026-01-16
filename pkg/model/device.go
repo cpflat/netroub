@@ -1,6 +1,9 @@
 package model
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
 type Connections struct {
 	SrcNode      string `json:"src_node"`
@@ -38,27 +41,45 @@ type Data struct {
 
 var Devices Data
 
-// LabName is the custom lab name for containerlab.
+// labName is the custom lab name for containerlab.
 // If empty, Devices.Name (topology name) is used.
-var LabName string
+// Access is protected by labNameMu for concurrent safety.
+var (
+	labName   string
+	labNameMu sync.RWMutex
+)
 
 // GetLabName returns the lab name to use for containerlab.
-// Returns custom LabName if set, otherwise returns Devices.Name.
+// Returns custom labName if set, otherwise returns Devices.Name.
+// Falls back to Scenar.ScenarioName for noDeploy mode where Devices is not loaded.
+// Thread-safe for concurrent access.
 func GetLabName() string {
-	if LabName != "" {
-		return LabName
+	labNameMu.RLock()
+	defer labNameMu.RUnlock()
+	if labName != "" {
+		return labName
 	}
-	return Devices.Name
+	if Devices.Name != "" {
+		return Devices.Name
+	}
+	// Fallback for noDeploy mode
+	return Scenar.ScenarioName
 }
 
 // SetLabName sets a custom lab name for containerlab.
+// Thread-safe for concurrent access.
 func SetLabName(name string) {
-	LabName = name
+	labNameMu.Lock()
+	defer labNameMu.Unlock()
+	labName = name
 }
 
 // ResetLabName clears the custom lab name.
+// Thread-safe for concurrent access.
 func ResetLabName() {
-	LabName = ""
+	labNameMu.Lock()
+	defer labNameMu.Unlock()
+	labName = ""
 }
 
 func ValidateHostNames(hosts []string) error {

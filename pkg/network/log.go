@@ -257,8 +257,8 @@ func TcpdumpLog(node string) error {
 		return err
 	}
 
-	// Create the tcpdump directory in the container
-	cmd := exec.Command("sudo", "docker", "exec", "-d", containerName, "mkdir", "tcpdump")
+	// Create the tcpdump directory in the container (use absolute path for consistency)
+	cmd := exec.Command("sudo", "docker", "exec", "-d", containerName, "mkdir", "/tcpdump")
 	var output []byte
 	output, err = cmd.CombinedOutput()
 	if err != nil {
@@ -279,7 +279,7 @@ func TcpdumpLog(node string) error {
 	// Add tcpdump commands for each interface
 	index := model.GetDeviceIndex(node)
 	for _, inter := range model.Devices.Nodes[index].Interfaces {
-		_, err = file.WriteString("tcpdump -i " + inter.Name + " -n -v > tcpdump/tcpdump" + "_" + inter.Name + ".log & \n")
+		_, err = file.WriteString("tcpdump -i " + inter.Name + " -n -v > /tcpdump/tcpdump" + "_" + inter.Name + ".log & \n")
 		if err != nil {
 			fmt.Println("Error while writing in tcpdump.sh file:", err)
 			return err
@@ -296,8 +296,8 @@ func TcpdumpLog(node string) error {
 	}
 	logrus.Debugf("execute %s\n", cmd.String())
 
-	// Run the tcpdump.sh script in the container
-	cmd = exec.Command("sudo", "docker", "exec", "-d", containerName, "./tcpdump.sh")
+	// Run the tcpdump.sh script in the container (use absolute path since working directory may vary)
+	cmd = exec.Command("sudo", "docker", "exec", "-d", containerName, "/tcpdump.sh")
 	output, err = cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println("Error while starting tcpdump:", err)

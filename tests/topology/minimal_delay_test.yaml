@@ -3,17 +3,15 @@ topology:
   nodes:
     r1:
       kind: linux
-      image: alpine:latest
+      image: nicolaka/netshoot:latest
       exec:
         - ip addr add 192.168.1.1/24 dev net0
         - ip link set net0 up
-        - apk add --no-cache iputils
     r2:
       kind: linux
-      image: alpine:latest
+      image: nicolaka/netshoot:latest
       exec:
         - ip addr add 192.168.1.2/24 dev net0
         - ip link set net0 up
-        - apk add --no-cache iputils
   links:
     - endpoints: ["r1:net0", "r2:net0"]

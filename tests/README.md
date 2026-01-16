@@ -7,6 +7,7 @@
 ```
 tests/
 ├── integration/          # 統合テスト
+│   ├── main_test.go             # TestMain（トポロジの一括デプロイ/破棄）
 │   ├── delay_event_test.go      # 遅延イベントテスト
 │   └── shell_copy_test.go       # シェル・コピーイベントテスト
 ├── topology/            # テスト用トポロジ定義
@@ -15,13 +16,33 @@ tests/
 │   ├── minimal_data.json
 │   └── test_input.txt           # コピーテスト用入力ファイル
 ├── scenarios/           # テストシナリオ
-│   ├── delay_50ms_scenario.json
-│   ├── delay_10ms_test.json
-│   ├── delay_100ms_test.json
-│   ├── shell_copy_test.json     # シェル・コピーテスト
-│   └── copy_bidirectional_test.json  # 双方向コピーテスト
+│   ├── *_nodeploy.json          # noDeploy用シナリオ（topoなし）
+│   └── *.json                   # 通常シナリオ（topoあり）
 └── README.md           # このファイル
 ```
+
+## テスト効率化: TestMain + noDeploy
+
+テスト実行時間を短縮するため、以下の構成を採用しています：
+
+1. **TestMain**: テストスイート全体で一度だけトポロジをデプロイ/破棄
+2. **noDeploy シナリオ**: `topo`フィールドなしのシナリオ（既存のコンテナを使用）
+
+これにより、各テストでのデプロイ/破棄のオーバーヘッド（約10-15秒/回）を削減できます。
+
+### noDeploy シナリオの例
+
+```json
+{
+    "scenarioName": "delay-test",
+    "logPath": "./test_logs",
+    "duration": "10s",
+    "hosts": ["r1", "r2"],
+    "event": [...]
+}
+```
+
+`topo`と`data`フィールドがないため、netroubはデプロイ/破棄をスキップし、イベントのみ実行します。
 
 ## 前提条件
 
@@ -127,6 +148,44 @@ make test-delay-parallel
 - **測定回数**: 10回の平均値で統計処理
 - **許容誤差**: 期待値の±20% または ±10ms (大きい方)
 - **ジッター制御**: 標準偏差が元の3倍以下であることを確認
+
+## リモート環境でのテスト実行
+
+開発環境（macOS等）ではDocker/Containerlabが動作しない場合、専用のLinux環境でテストを実行します。
+
+### 環境同期
+
+```bash
+# ローカルからリモートへ同期（~/project/go/から実行）
+./rsync-project netroub <remote-host>
+
+# 例
+./rsync-project netroub glados
+```
+
+### リモートでのテスト実行
+
+```bash
+# リモート環境にSSH接続
+ssh <remote-host>
+cd ~/netroub
+
+# goコマンドがPATHにない場合はフルパスで実行
+sudo -E /usr/local/go/bin/go test -v -timeout 10m ./tests/integration/...
+
+# または
+sudo env "PATH=$PATH" go test -v -timeout 10m ./tests/integration/...
+```
+
+### 特定テストのみ実行
+
+```bash
+# Delayテストのみ
+sudo -E /usr/local/go/bin/go test -v -timeout 5m -run TestDelayEvent ./tests/integration/
+
+# Shell/Copyテストのみ
+sudo -E /usr/local/go/bin/go test -v -timeout 5m -run TestShellAndCopyEvent ./tests/integration/
+```
 
 ## トラブルシューティング
 
