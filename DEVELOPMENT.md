@@ -6,7 +6,7 @@ This document provides guidance for developers contributing to Netroub.
 
 ### Required Tools
 
-- **Go** 1.21 or later
+- **Go** 1.23 or later
 - **Docker** for container operations
 - **Containerlab** for network topology deployment (integration tests only)
 - **Pumba** for chaos injection (runtime only)
@@ -22,24 +22,17 @@ netroub/
 ├── main.go                 # CLI entry point (urfave/cli)
 ├── pkg/
 │   ├── model/              # Data models and scenario parsing
-│   │   └── scenario.go     # Event, Scenario, FileCopy structs
 │   ├── events/             # Event execution logic
-│   │   ├── event.go        # Event dispatcher
-│   │   ├── pumba.go        # Pumba event handler
-│   │   ├── shell.go        # Shell event handler
-│   │   ├── config.go       # Config event handler
-│   │   ├── copy.go         # Copy event handler
-│   │   ├── copy_test.go    # Unit tests for copy
-│   │   └── shell_test.go   # Unit tests for shell
-│   └── network/            # Network emulation control
+│   ├── executor/           # Batch/repeat execution, progress, cleaner
+│   ├── network/            # Network emulation control
+│   └── runtime/            # Scenario runtime
 ├── example/                # Example scenario files
 ├── topo/                   # Example topology files
-├── tests/                  # Integration tests
-│   ├── integration/        # Integration test code
-│   ├── topology/           # Test topology files
-│   ├── scenarios/          # Test scenario files
-│   └── data/               # Test data files
-└── tool/                   # Utility scripts
+└── tests/                  # Integration tests
+    ├── integration/        # Integration test code
+    ├── topology/           # Test topology files
+    ├── scenarios/          # Test scenario files
+    └── data/               # Test data files
 ```
 
 ## Building
@@ -187,11 +180,16 @@ func TestBuildMyEventCommand(t *testing.T) {
 
 | Type | Description | Handler |
 |------|-------------|---------|
-| `pumba` | Network chaos injection | `ExecPumbaCommand` |
+| `delay` | Network delay injection | `ExecPumbaCommand` |
+| `loss` | Packet loss injection | `ExecPumbaCommand` |
+| `corrupt` | Packet corruption | `ExecPumbaCommand` |
+| `duplicate` | Packet duplication | `ExecPumbaCommand` |
+| `rate` | Bandwidth limiting | `ExecPumbaCommand` |
+| `stress` | CPU/memory stress | `ExecPumbaCommand` |
 | `shell` | Execute shell commands | `ExecShellCommand` |
 | `config` | FRR configuration changes | `ExecConfigCommand` |
 | `copy` | File copy between host and container | `ExecCopyCommand` |
-| `dummy` | Internal timing control | `ExecDummyCommand` |
+| `collect` | Collect files from container to log directory | `ExecCollectCommand` |
 
 ## Code Style
 
