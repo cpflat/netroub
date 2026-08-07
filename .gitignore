@@ -6,9 +6,12 @@ netroub
 *.log
 control.log
 
-# Symbolic links to private documentation
+# Symlinks to other repositories
 doc
 CLAUDE.md
+wiki
+.serena
+/heinzel
 
 # Claude Code
 .claude/
