@@ -7,7 +7,7 @@ netroub
 control.log
 
 # Symlinks to other repositories
-doc
+dev
 CLAUDE.md
 wiki
 .serena
